@@ -1,11 +1,11 @@
 package projetos.spring.nivelamento_sb.service;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import projetos.spring.nivelamento_sb.domain.Anime;
+import projetos.spring.nivelamento_sb.exception.BadRequestException;
 import projetos.spring.nivelamento_sb.mapper.AnimeMapper;
 import projetos.spring.nivelamento_sb.repository.AnimeRepository;
 import projetos.spring.nivelamento_sb.requests.AnimePostRequestBody;
@@ -24,13 +24,12 @@ public class AnimeService {
     }
 
     public List<Anime> findByName(String name) {
-
         return animeRepository.findByName(name);
     }
 
     public Anime findByIdOrThrowBadRequestException(long id) {
         return animeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not Found"));
+                .orElseThrow(() -> new BadRequestException("Anime not Found"));
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {

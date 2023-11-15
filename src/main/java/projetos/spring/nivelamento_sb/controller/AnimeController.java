@@ -1,6 +1,5 @@
 package projetos.spring.nivelamento_sb.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,6 @@ public class AnimeController {
     @GetMapping(path = "/find")
     public ResponseEntity<List<Anime>> findByName(@RequestParam String name) {
         return ResponseEntity.ok(animeService.findByName(name));
-
     }
 
     @PostMapping
