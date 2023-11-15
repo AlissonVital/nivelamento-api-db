@@ -1,49 +1,42 @@
 package projetos.spring.nivelamento_sb.controller;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import projetos.spring.nivelamento_sb.domain.Anime;
+import projetos.spring.nivelamento_sb.requests.AnimePostRequestBody;
+import projetos.spring.nivelamento_sb.requests.AnimePutRequestBody;
 import projetos.spring.nivelamento_sb.service.AnimeService;
 import projetos.spring.nivelamento_sb.util.DateUtil;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
-//ENDPOINT
 
-@RestController//ANOTAÇÃO O RETORNO QUE TEREMOS NESTA CLASSE SERÃO APENAS STRINGS(TODOS OS METODOS IRAM CHAMR O @RESPONSEBODY)
-@RequestMapping("animes")//FAZ QUE O ENDIPOIT TODOS ACESSEM ATRAVES DO localhost:8080/anime/list //A APLICAÇÃO @RestController IRÁ PROCURAR O ENDPOINT PARA LISTAR OS NOMES CRIADOS, PARA ISSO DEVE USAR O
+@RestController
+@RequestMapping("animes")
 @Log4j2
-@RequiredArgsConstructor//ESTA ANOTAÇÃO CRIA UM CONSTRUTOR COM TODOS OS ATRIBUTOS RELACIONADOA A CLASSE QUE VOCE TEM, DEVE-SE ACRESCENTAR "final" DEPOIS DO private. pode usar também o @AllArgsConstructor sem ter que usar o "final"
+@RequiredArgsConstructor
 public class AnimeController {
-    //localhost:8080/anime/list
     private final DateUtil dateUtil;
     private final AnimeService animeService;
 
     @GetMapping
     public ResponseEntity<List<Anime>> list() {
-        log.info(dateUtil.formatLocalDateTimeToDataBaseStyle(LocalDateTime.now()));
+        log.info(dateUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animeService.listAll());
     }
 
-    @GetMapping(path = "/{id}")//PARAMETRO PARA SELECIONAR OS ANIMES POR ID
-    public ResponseEntity<Anime> findById(@PathVariable long id) {//para o java mapear essa variavel
-        log.info(dateUtil.formatLocalDateTimeToDataBaseStyle(LocalDateTime.now()));
-        return ResponseEntity.ok(animeService.findById(id));
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<Anime> findById(@PathVariable long id) {
+        return ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id));
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody Anime anime) {
-        return new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);//HttpStatus.CREATED É RESPONSÁVEL PELO RESULTADO 201
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody) {
+        return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -52,9 +45,9 @@ public class AnimeController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping//(path = "/{id}")
-    public ResponseEntity<Void> replace(@RequestBody Anime anime) {
-        animeService.replace(anime);
+    @PutMapping
+    public ResponseEntity<Void> replace(@RequestBody AnimePutRequestBody animePutRequestBody) {
+        animeService.replace(animePutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
