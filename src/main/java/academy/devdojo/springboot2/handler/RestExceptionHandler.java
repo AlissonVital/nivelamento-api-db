@@ -36,11 +36,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         .build(), HttpStatus.BAD_REQUEST);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         String fields = fieldErrors.stream().map(FieldError::getField).collect(Collectors.joining(", "));
         String fieldsMessage = fieldErrors.stream().map(FieldError::getDefaultMessage).collect(Collectors.joining(", "));
 
@@ -56,7 +54,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         .build(), HttpStatus.BAD_REQUEST);
     }
 
-    @Override
+
     protected ResponseEntity<Object> handleExceptionInternal(
             Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
 

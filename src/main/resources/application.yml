@@ -10,9 +10,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
 
 
-
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
     # [usado pelo Brunão] -> driver-class-name: com.mysql.jdbc.Driver
 
